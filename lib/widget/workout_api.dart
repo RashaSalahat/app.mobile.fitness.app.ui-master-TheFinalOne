@@ -19,6 +19,16 @@ class _LineChartAPIState extends State<LineChartAPI> {
   List<Welcome> genders = [];
   List<Welcome> tempdata = [];
   bool loading = true;
+  int length = 0;
+  double mon = 0.0;
+  double tue = 0.0;
+  double wed = 0.0;
+  double thur = 0.0;
+
+  double fri = 0.0;
+  double sat = 0.0;
+  double sun = 0.0;
+
   NetworkHelper _networkHelper = NetworkHelper();
   var response;
   @override
@@ -30,12 +40,21 @@ class _LineChartAPIState extends State<LineChartAPI> {
 
   //LineChartAPI();
   Future<void> getData() async {
-    response = await _networkHelper
-        .get("http://10.0.2.2:3000/getWorkout/6277b4321119d5367cf8b045");
+    response =
+        await _networkHelper.get("http://10.0.2.2:3000/getWorkout/Rasha");
     tempdata = welcomeFromJson("[" + response.body + "]");
     genders = tempdata;
-    print(tempdata.toList().elementAt(0).id);
-
+    length = tempdata.toList().length;
+    if (length != 0) print(tempdata.toList().elementAt(0).id);
+    if (length != 0) {
+      mon = (tempdata.toList().elementAt(length - 1).mon.toDouble());
+      tue = (tempdata.toList().elementAt(length - 1).tue.toDouble());
+      wed = (tempdata.toList().elementAt(length - 1).wed.toDouble());
+      thur = (tempdata.toList().elementAt(length - 1).thur.toDouble());
+      fri = (tempdata.toList().elementAt(length - 1).fri.toDouble());
+      sat = (tempdata.toList().elementAt(length - 1).sat.toDouble());
+      sun = (tempdata.toList().elementAt(length - 1).sun.toDouble());
+    }
     //bool _r = false;
     bool r = false;
 
@@ -141,13 +160,13 @@ class _LineChartAPIState extends State<LineChartAPI> {
       lineBarsData: [
         LineChartBarData(
           spots: [
-            FlSpot(0, (tempdata.toList().elementAt(0).mon.toDouble())),
-            FlSpot(2.6, (tempdata.toList().elementAt(0).tue.toDouble())),
-            FlSpot(4.9, (tempdata.toList().elementAt(0).wed.toDouble())),
-            FlSpot(6.8, (tempdata.toList().elementAt(0).thur.toDouble())),
-            FlSpot(8, (tempdata.toList().elementAt(0).fri.toDouble())),
-            FlSpot(9.5, (tempdata.toList().elementAt(0).sat.toDouble())),
-            FlSpot(11, (tempdata.toList().elementAt(0).sun.toDouble())),
+            FlSpot(0, (mon)),
+            FlSpot(2.6, (tue)),
+            FlSpot(4.9, (wed)),
+            FlSpot(6.8, (thur)),
+            FlSpot(8, (fri)),
+            FlSpot(9.5, (sat)),
+            FlSpot(11, (sun)),
           ],
           isCurved: true,
           colors: gradientColors,

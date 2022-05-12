@@ -8,6 +8,12 @@ import 'package:flutter_svg/svg.dart';
 
 import '../data/latest_workout.dart';
 
+import 'package:fitness_ui_kit/network/network_helper.dart';
+
+import 'package:fitness_ui_kit/widget/milk_model.dart';
+
+import 'dart:developer' as developer;
+
 class TodayTargetDetailPage extends StatefulWidget {
   const TodayTargetDetailPage({Key? key}) : super(key: key);
 
@@ -17,6 +23,106 @@ class TodayTargetDetailPage extends StatefulWidget {
 
 class _TodayTargetDetailPageState extends State<TodayTargetDetailPage> {
   @override
+  List<Color> gradientColors = [primary];
+  List<Welcome> genders = [];
+  List<Welcome> tempdata = [];
+  List weekly = [];
+  bool loading = true;
+  int length = 0;
+  double mon = 0.0;
+  double tue = 0.0;
+  double wed = 0.0;
+  double thur = 0.0;
+
+  double fri = 0.0;
+  double sat = 0.0;
+  double sun = 0.0;
+  NetworkHelper _networkHelper = NetworkHelper();
+  var response;
+  @override
+  double rasha = 0.0;
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  //LineChartAPI();
+  Future<void> getData() async {
+    response = await _networkHelper.get("http://10.0.2.2:3000/getMilk/Rasha");
+    tempdata = welcomeFromJson("[" + response.body + "]");
+    genders = tempdata;
+    length = tempdata.toList().length;
+    if (length != 0) print(tempdata.toList().elementAt(0).id);
+    if (length != 0) {
+      mon = (tempdata.toList().elementAt(length - 1).mon.toDouble());
+      tue = (tempdata.toList().elementAt(length - 1).tue.toDouble());
+      wed = (tempdata.toList().elementAt(length - 1).wed.toDouble());
+      thur = (tempdata.toList().elementAt(length - 1).thur.toDouble());
+      fri = (tempdata.toList().elementAt(length - 1).fri.toDouble());
+      sat = (tempdata.toList().elementAt(length - 1).sat.toDouble());
+      sun = (tempdata.toList().elementAt(length - 1).sun.toDouble());
+    }
+    mon = mon / 200;
+    if (mon > 1) mon = 1;
+    tue = tue / 200;
+    if (tue > 1) tue = 1;
+    wed = wed / 200;
+    if (wed > 1) wed = 1;
+    thur = thur / 200;
+    if (thur > 1) thur = 1;
+    fri = fri / 200;
+    if (fri > 1) fri = 1;
+    sat = sat / 200;
+    if (sat > 1) sat = 1;
+    sun = sun / 200;
+    if (sun > 1) sun = 1;
+    //bool _r = false;
+    bool r = false;
+
+    setState(() {
+      genders = tempdata;
+      loading = false;
+    });
+
+    weekly = [
+      {
+        "day": "Sun",
+        "count": (sun),
+        "color": [secondary, primary]
+      },
+      {
+        "day": "Mon",
+        "count": (mon),
+        "color": [fourthColor, thirdColor]
+      },
+      {
+        "day": "Tue",
+        "count": (tue),
+        "color": [secondary, primary]
+      },
+      {
+        "day": "Wed",
+        "count": (wed),
+        "color": [fourthColor, thirdColor]
+      },
+      {
+        "day": "Thu",
+        "count": (thur),
+        "color": [secondary, primary]
+      },
+      {
+        "day": "Fri",
+        "count": (fri),
+        "color": [fourthColor, thirdColor]
+      },
+      {
+        "day": "Sat",
+        "count": (sat),
+        "color": [secondary, primary]
+      }
+    ];
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

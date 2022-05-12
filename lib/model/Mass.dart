@@ -1,22 +1,39 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// To parse this JSON data, do
+//
+//     final welcome = welcomeFromJson(jsonString);
 
-class Mass {
-  String baseUrl = "http://10.0.2.2:3000/showMass";
-  Future<SingleChildScrollView> getAllMass() async {
-    try {
-      var response = await http.get(Uri.parse(baseUrl));
-      if (response.statusCode == 200) {
-        //final json = "[" + response.body + "]";
-        print(response.body);
-        return jsonDecode(response.body);
-      } else {
-        return Future.error("Server Error");
-      }
-    } catch (e) {
-      return Future.error(e);
-    }
-  }
+import 'dart:convert';
+
+List<Welcome> welcomeFromJson(String str) =>
+    List<Welcome>.from(json.decode(str).map((x) => Welcome.fromJson(x)));
+
+String welcomeToJson(List<Welcome> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Welcome {
+  Welcome({
+    required this.id,
+    required this.name,
+    required this.height,
+    required this.mass,
+  });
+
+  String id;
+  String name;
+  String height;
+  String mass;
+
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+        id: json["_id"],
+        name: json["name"],
+        height: json["Height"],
+        mass: json["Mass"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "name": name,
+        "Height": height,
+        "Mass": mass,
+      };
 }
